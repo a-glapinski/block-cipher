@@ -8,11 +8,14 @@ val files = listOf(
     File("200mb.txt")
 )
 
-
 fun main() {
+    init()
+}
+
+fun init() {
     println("Initializing files...")
     val fileTexts = files.map { file ->
-        file to file.bufferedReader().useLines { it.joinToString("") }
+        file.name to file.bufferedReader().useLines { it.joinToString("") }
     }
     println("Done!\n")
 
@@ -21,7 +24,6 @@ fun main() {
         printEncryptionTime(text)
         println()
     }
-
 }
 
 fun printEncryptionTime(text: String) {
