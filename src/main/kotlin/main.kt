@@ -10,7 +10,7 @@ val files = listOf(
 
 
 fun main() {
-    val fileTexts: List<Pair<File, String>> = files.map { file ->
+    val fileTexts = files.asSequence().map { file ->
         file to file.bufferedReader().useLines { it.joinToString("") }
     }
 
