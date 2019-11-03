@@ -4,7 +4,7 @@ import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 
 object AesEcb : Aes {
-    override val cipher: Cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
+    override val cipher: Cipher = Cipher.getInstance("AES/ECB/NoPadding")
 
     override fun encrypt(input: String, key: String): String {
         val encrypted: ByteArray = try {

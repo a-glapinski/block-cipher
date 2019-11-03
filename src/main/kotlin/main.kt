@@ -6,7 +6,9 @@ fun main() {
     println(s)
     val x = AesCbcOwn.decrypt(s, key)
     println(x)
-
+//
 //    val s2 = AesEcb.encrypt(input, key)
 //    val x2 = AesEcb.decrypt(s2, key)
+//    println(s2)
+//    println(x2)
 }

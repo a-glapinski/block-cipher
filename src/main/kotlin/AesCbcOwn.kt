@@ -1,3 +1,5 @@
+import java.util.*
+import kotlin.NoSuchElementException
 import kotlin.experimental.xor
 
 /**
@@ -6,17 +8,17 @@ import kotlin.experimental.xor
 object AesCbcOwn {
     fun encrypt(plainText: String, key: String): String {
         val iv = key.take(16).toByteArray()
-
         val blocks = plainText.chunked(16).map { it.toByteArray() }
-        val blocksIterator = blocks.iterator()
 
-        val encryptedBytes = generateSequence(
-            AesEcb.encryptToByteArray(iv xor blocksIterator.next(), key)
-        ) {
-            try {
-                AesEcb.encryptToByteArray(it xor blocksIterator.next(), key)
-            } catch (e: NoSuchElementException) {
-                null
+        val encryptedBytes = with(blocks.iterator()) {
+            generateSequence(
+                AesEcb.encryptToByteArray(iv xor next(), key)
+            ) {
+                try {
+                    AesEcb.encryptToByteArray(it xor next(), key)
+                } catch (e: NoSuchElementException) {
+                    null
+                }
             }
         }
 
@@ -25,17 +27,17 @@ object AesCbcOwn {
 
     fun decrypt(encryptedText: String, key: String): String {
         val iv = key.take(16).toByteArray()
+        val encryptedBlocks = encryptedText.chunked(16).map { it.toByteArray() }
 
-        val encryptedBlocks = encryptedText.chunked(22).map { it.toByteArray() }
-        val blocksIterator = encryptedBlocks.iterator()
-
-        val decryptedBytes = generateSequence(
-            AesEcb.decryptToByteArray(blocksIterator.next(), key) xor iv
-        ) {
-            try {
-                AesEcb.decryptToByteArray(blocksIterator.next(), key) xor it
-            } catch (e: NoSuchElementException) {
-                null
+        val decryptedBytes = with(encryptedBlocks.iterator()) {
+            generateSequence(
+                AesEcb.decryptToByteArray(next(), key) xor iv
+            ) {
+                try {
+                    AesEcb.decryptToByteArray(next(), key) xor it
+                } catch (e: NoSuchElementException) {
+                    null
+                }
             }
         }
 
