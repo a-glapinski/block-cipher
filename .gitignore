@@ -20,3 +20,5 @@ HELP.md
 /out/
 
 .kotlintest
+
+*mb.txt
