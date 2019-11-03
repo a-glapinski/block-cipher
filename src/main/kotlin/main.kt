@@ -10,9 +10,11 @@ val files = listOf(
 
 
 fun main() {
-    val fileTexts = files.asSequence().map { file ->
+    println("Initializing files...")
+    val fileTexts = files.map { file ->
         file to file.bufferedReader().useLines { it.joinToString("") }
     }
+    println("Done!\n")
 
     fileTexts.forEach { (name, text) ->
         println(name)
