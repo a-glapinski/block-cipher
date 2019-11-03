@@ -41,23 +41,12 @@ object AESCbcOwn : AESInterface {
 
         cipher.init(Cipher.DECRYPT_MODE, secretKey)
 
-        lateinit var next: ByteArray
-        val decryptedBytes = with(encryptedBlocks.iterator()) {
-            generateSequence(
-                {
-                    next = next()
-                    cipher.doFinal(next) xor iv
-                },
-                {
-                    try {
-                        val previous = next
-                        next = next()
-                        cipher.doFinal(next) xor previous
-                    } catch (e: NoSuchElementException) {
-                        null
-                    }
-                }
-            )
+        val decryptedBytes = sequence {
+            yield(cipher.doFinal(encryptedBlocks.first()) xor iv)
+
+            for (i in 1 until encryptedBlocks.size) {
+                yield(cipher.doFinal(encryptedBlocks[i]) xor encryptedBlocks[i - 1])
+            }
         }.toByteArray()
 
         return String(decryptedBytes)
