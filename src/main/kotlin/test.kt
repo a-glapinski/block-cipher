@@ -10,8 +10,9 @@ fun main() {
 
 fun ecb() {
     println("ECB")
-    val encrypted = AesEcb.encrypt(INPUT, KEY)
-    val decrypted = AesEcb.decrypt(encrypted, KEY)
+    val aesEcb = AES(AES.Mode.ECB)
+    val encrypted = aesEcb.encrypt(INPUT, KEY)
+    val decrypted = aesEcb.decrypt(encrypted, KEY)
 
     println(encrypted)
     println(decrypted)
@@ -19,7 +20,7 @@ fun ecb() {
 
 fun cbc() {
     println("\nCBC")
-    val aesCbc = AesWithIv(AesWithIv.Mode.CBC)
+    val aesCbc = AES(AES.Mode.CBC)
     val encrypted = aesCbc.encrypt(INPUT, KEY)
     val decrypted = aesCbc.decrypt(encrypted, KEY)
 
@@ -29,7 +30,7 @@ fun cbc() {
 
 fun ofb() {
     println("\nOFB")
-    val aesOfb = AesWithIv(AesWithIv.Mode.OFB)
+    val aesOfb = AES(AES.Mode.OFB)
     val encrypted = aesOfb.encrypt(INPUT, KEY)
     val decrypted = aesOfb.decrypt(encrypted, KEY)
 
@@ -39,7 +40,7 @@ fun ofb() {
 
 fun cfb() {
     println("\nCFB")
-    val aesCfb = AesWithIv(AesWithIv.Mode.CFB)
+    val aesCfb = AES(AES.Mode.CFB)
 
     val encrypted = aesCfb.encrypt(INPUT, KEY)
     val decrypted = aesCfb.decrypt(encrypted, KEY)
@@ -50,7 +51,7 @@ fun cfb() {
 
 fun ctr() {
     println("\nCTR")
-    val aesCtr = AesWithIv(AesWithIv.Mode.CTR)
+    val aesCtr = AES(AES.Mode.CTR)
 
     val encrypted = aesCtr.encrypt(INPUT, KEY)
     val decrypted = aesCtr.decrypt(encrypted, KEY)

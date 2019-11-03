@@ -3,7 +3,7 @@ import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 
-object AesEcb : Aes {
+object AESEcb : AESInterface {
     override val cipher: Cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
 
     override fun encrypt(input: String, key: String): String {
@@ -16,7 +16,7 @@ object AesEcb : Aes {
             throw e
         }
 
-        return Base64.getEncoder().run { encodeToString(encrypted) }
+        return Base64.getEncoder().encodeToString(encrypted)
     }
 
     override fun decrypt(input: String, key: String): String {

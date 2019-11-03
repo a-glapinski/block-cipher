@@ -10,10 +10,10 @@ object AesCbcOwn {
 
         val encryptedBytes = with(blocks.iterator()) {
             generateSequence(
-                AesEcb.encryptToByteArray(iv xor next(), key)
+                AESEcb.encryptToByteArray(iv xor next(), key)
             ) {
                 try {
-                    AesEcb.encryptToByteArray(it xor next(), key)
+                    AESEcb.encryptToByteArray(it xor next(), key)
                 } catch (e: NoSuchElementException) {
                     null
                 }
@@ -29,10 +29,10 @@ object AesCbcOwn {
 
         val decryptedBytes = with(encryptedBlocks.iterator()) {
             generateSequence(
-                AesEcb.decryptToByteArray(next(), key) xor iv
+                AESEcb.decryptToByteArray(next(), key) xor iv
             ) {
                 try {
-                    AesEcb.decryptToByteArray(next(), key) xor it
+                    AESEcb.decryptToByteArray(next(), key) xor it
                 } catch (e: NoSuchElementException) {
                     null
                 }
