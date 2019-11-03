@@ -2,7 +2,9 @@ import AES.Mode.ECB
 import java.io.File
 import kotlin.system.measureTimeMillis
 
+const val INPUT = "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd"
 const val KEY = "mvLBiZsiTbGwrfJB"
+
 val files = listOf(
     File("10mb.txt"),
     File("100mb.txt"),
@@ -10,7 +12,10 @@ val files = listOf(
 )
 
 fun main() {
-    init()
+//    init()
+    val x = AESCbcOwn.encrypt(INPUT, KEY)
+    val y = AESCbcOwn.decrypt(x, KEY)
+    println(y)
 }
 
 fun init() {

@@ -51,6 +51,4 @@ class AES(private val mode: Mode) : AESInterface {
 
         return String(output)
     }
-
-    fun getMode() = this.mode
 }
