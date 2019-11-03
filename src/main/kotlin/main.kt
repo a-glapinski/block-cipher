@@ -15,6 +15,7 @@ fun main() {
 //    init()
     val x = AESCbcOwn.encrypt(INPUT, KEY)
     val y = AESCbcOwn.decrypt(x, KEY)
+    println(x)
     println(y)
 }
 

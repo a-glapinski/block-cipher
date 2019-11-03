@@ -20,9 +20,9 @@ object AESCbcOwn : AESInterface {
         val encryptedBytes = with(blocks.iterator()) {
             generateSequence(
                 cipher.doFinal(iv xor next())
-            ) {
+            ) { prevResult ->
                 try {
-                    cipher.doFinal(it xor next())
+                    cipher.doFinal(prevResult xor next())
                 } catch (e: NoSuchElementException) {
                     null
                 }
@@ -41,22 +41,29 @@ object AESCbcOwn : AESInterface {
 
         cipher.init(Cipher.DECRYPT_MODE, secretKey)
 
+        lateinit var next: ByteArray
         val decryptedBytes = with(encryptedBlocks.iterator()) {
             generateSequence(
-                cipher.doFinal(next()) xor iv
-            ) {
-                try {
-                    cipher.doFinal(next()) xor it
-                } catch (e: NoSuchElementException) {
-                    null
+                {
+                    next = next()
+                    cipher.doFinal(next) xor iv
+                },
+                {
+                    try {
+                        val previous = next
+                        next = next()
+                        cipher.doFinal(next) xor previous
+                    } catch (e: NoSuchElementException) {
+                        null
+                    }
                 }
-            }
+            )
         }.toByteArray()
 
         return String(decryptedBytes)
     }
 
-    private infix fun ByteArray.xor(other: ByteArray) =
+    private infix fun ByteArray.xor(other: ByteArray): ByteArray =
         this.zip(other) { thisByte, otherByte -> thisByte xor otherByte }.toByteArray()
 }
 
