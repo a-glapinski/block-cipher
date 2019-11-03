@@ -28,6 +28,7 @@ object AesEcb : Aes {
         } catch (e: InvalidKeyException) {
             throw e
         }
+
         return String(output)
     }
 
