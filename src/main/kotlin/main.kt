@@ -2,7 +2,7 @@ import AES.Mode.ECB
 import java.io.File
 import kotlin.system.measureTimeMillis
 
-const val INPUT = "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd"
+const val INPUT = "ala ma kota"
 const val KEY = "mvLBiZsiTbGwrfJB"
 
 val files = listOf(
@@ -12,11 +12,12 @@ val files = listOf(
 )
 
 fun main() {
-//    init()
-    val x = AESCbcOwn.encrypt(INPUT, KEY)
-    val y = AESCbcOwn.decrypt(x, KEY)
-    println(x)
-    println(y)
+    val encrypted = AESCbcOwn.encrypt(INPUT, KEY)
+    val decrypted = AESCbcOwn.decrypt(encrypted, KEY)
+    println(encrypted)
+    println(decrypted)
+
+    init()
 }
 
 fun init() {
@@ -55,7 +56,7 @@ fun measureDecryptionTime(encryptedText: String, mode: AES.Mode = ECB): Long {
     return measureTimeMillis { cipher.decrypt(encryptedText, KEY) }
 }
 
-inline fun <T> measureTimeMillisWithResult(block: () -> T): Pair<Long, T> {
+inline fun <R> measureTimeMillisWithResult(block: () -> R): Pair<Long, R> {
     val start = System.currentTimeMillis()
     val result = block()
     val time = System.currentTimeMillis() - start

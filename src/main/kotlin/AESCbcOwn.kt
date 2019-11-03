@@ -13,7 +13,7 @@ object AESCbcOwn : AESInterface {
         val secretKey = SecretKeySpec(key.toByteArray(), "AES")
 
         val iv = key.take(16).toByteArray()
-        val blocks = input.chunked(16).map { it.toByteArray() }
+        val blocks = input.pkcs5Padding().chunked(16)
 
         cipher.init(Cipher.ENCRYPT_MODE, secretKey)
 
@@ -37,7 +37,7 @@ object AESCbcOwn : AESInterface {
         val secretKey = SecretKeySpec(key.toByteArray(), "AES")
 
         val iv = key.take(16).toByteArray()
-        val encryptedBlocks = decodedText.toList().chunked(16).map { it.toByteArray() }
+        val encryptedBlocks = decodedText.chunked(16)
 
         cipher.init(Cipher.DECRYPT_MODE, secretKey)
 
@@ -49,11 +49,24 @@ object AESCbcOwn : AESInterface {
             }
         }.toByteArray()
 
-        return String(decryptedBytes)
+        return decryptedBytes.pkcs5Trimming()
     }
 
     private infix fun ByteArray.xor(other: ByteArray): ByteArray =
         this.zip(other) { thisByte, otherByte -> thisByte xor otherByte }.toByteArray()
+
+    private fun String.pkcs5Padding(blockSize: Int = 16): ByteArray {
+        val paddingLength = blockSize - (this.length % blockSize)
+        val padText = ByteArray(paddingLength) { paddingLength.toByte() }
+        return this.toByteArray() + padText
+    }
+
+    private fun ByteArray.pkcs5Trimming(): String {
+        val paddingLength = this.last().toInt()
+        return String(this.take(this.size - paddingLength).toByteArray())
+    }
 }
 
 private fun Sequence<ByteArray>.toByteArray() = this.flatMap { it.asSequence() }.toList().toByteArray()
+
+private fun ByteArray.chunked(size: Int) = this.toList().chunked(size).map { it.toByteArray() }
