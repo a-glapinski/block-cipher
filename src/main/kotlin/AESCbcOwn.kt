@@ -57,8 +57,8 @@ object AESCbcOwn : AESInterface {
 
     private fun String.pkcs5Padding(blockSize: Int = 16): ByteArray {
         val paddingLength = blockSize - (this.length % blockSize)
-        val padText = ByteArray(paddingLength) { paddingLength.toByte() }
-        return this.toByteArray() + padText
+        val padding = ByteArray(paddingLength) { paddingLength.toByte() }
+        return this.toByteArray() + padding
     }
 
     private fun ByteArray.pkcs5Trimming(): String {
