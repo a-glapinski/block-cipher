@@ -17,20 +17,19 @@ object AESCbcOwn : AESInterface {
 
         cipher.init(Cipher.ENCRYPT_MODE, secretKey)
 
-        val encryptedBytes = with(blocks.iterator()) {
+        val encryptedBytes = run {
+            val iterator = blocks.iterator()
             generateSequence(
-                cipher.doFinal(iv xor next())
+                cipher.doFinal(iv xor iterator.next())
             ) { prevResult ->
-                try {
-                    cipher.doFinal(prevResult xor next())
-                } catch (e: NoSuchElementException) {
-                    null
-                }
+                if (iterator.hasNext()) cipher.doFinal(prevResult xor iterator.next())
+                else null
             }
         }.toByteArray()
 
         return Base64.getEncoder().encodeToString(encryptedBytes)
     }
+
 
     override fun decrypt(input: String, key: String): String {
         val decodedText = Base64.getDecoder().decode(input)
