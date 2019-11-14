@@ -1,4 +1,4 @@
-import AES.Mode.ECB
+import AES.Mode.CBC
 import java.io.File
 import kotlin.system.measureTimeMillis
 
@@ -27,6 +27,14 @@ fun init() {
     }
     println("Done!\n")
 
+    // Warm up
+    buildString(100_000_000) {
+        val alphabet = 'A'..'Z'
+        repeat(100_000_000) { append(alphabet.random()) }
+    }.let {
+        encryptAndMeasureTime(it, KEY, CBC).also { (_, result) -> measureDecryptionTime(result, KEY, CBC) }
+    }
+
     fileTexts.forEach { (name, text) ->
         println(name)
         printEncryptionTime(text)
@@ -38,22 +46,22 @@ fun printEncryptionTime(text: String) {
     val modes = enumValues<AES.Mode>()
 
     modes.forEach { mode ->
-        encryptAndMeasureTime(text, mode).also { (time, result) ->
-            println("$mode - encrypt: $time ms | decrypt: ${measureDecryptionTime(result, mode)} ms")
+        encryptAndMeasureTime(text, KEY, mode).also { (time, result) ->
+            println("$mode - encrypt: $time ms | decrypt: ${measureDecryptionTime(result, KEY, mode)} ms")
         }
     }
 }
 
-fun encryptAndMeasureTime(plainText: String, mode: AES.Mode = ECB): Pair<Long, String> {
+fun encryptAndMeasureTime(plainText: String, key: String, mode: AES.Mode): Pair<Long, String> {
     val cipher = AES(mode)
 
-    return measureTimeMillisWithResult { cipher.encrypt(plainText, KEY) }
+    return measureTimeMillisWithResult { cipher.encrypt(plainText, key) }
 }
 
-fun measureDecryptionTime(encryptedText: String, mode: AES.Mode = ECB): Long {
+fun measureDecryptionTime(encryptedText: String, key: String, mode: AES.Mode): Long {
     val cipher = AES(mode)
 
-    return measureTimeMillis { cipher.decrypt(encryptedText, KEY) }
+    return measureTimeMillis { cipher.decrypt(encryptedText, key) }
 }
 
 inline fun <R> measureTimeMillisWithResult(block: () -> R): Pair<Long, R> {

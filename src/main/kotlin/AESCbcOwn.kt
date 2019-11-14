@@ -30,7 +30,6 @@ object AESCbcOwn : AESInterface {
         return Base64.getEncoder().encodeToString(encryptedBytes)
     }
 
-
     override fun decrypt(input: String, key: String): String {
         val decodedText = Base64.getDecoder().decode(input)
         val secretKey = SecretKeySpec(key.toByteArray(), "AES")
