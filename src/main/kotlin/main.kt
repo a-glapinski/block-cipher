@@ -17,7 +17,27 @@ fun main() {
     println(encrypted)
     println(decrypted)
 
-    init()
+    errorPropagationTest()
+
+    //    init()
+}
+
+fun errorPropagationTest() {
+    println("\nError propagation:")
+    val input = "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd"
+    val ciphers = enumValues<AES.Mode>().map { mode -> AES(mode) }
+
+    ciphers.forEach {
+        val encrypted = it.encrypt(input, KEY)
+        val modified = encrypted.toCharArray().apply { set((0..15).random(), ('A'..'Z').random()) }
+            .joinToString("")
+        val decrypted = it.decrypt(modified, KEY).chunked(16).joinToString(" ")
+
+        println("\n" + it.cipher.algorithm)
+        println("Encrypted:\t$encrypted")
+        println("Modified:\t$modified")
+        println("Decrypted:\t$decrypted")
+    }
 }
 
 fun init() {

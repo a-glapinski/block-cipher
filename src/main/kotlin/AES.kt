@@ -10,7 +10,7 @@ class AES(private val mode: Mode) : AESInterface {
         ECB, CBC, OFB, CFB, CTR
     }
 
-    override val cipher: Cipher = Cipher.getInstance("AES/$mode/PKCS5Padding")
+    override val cipher: Cipher = Cipher.getInstance("AES/$mode/NoPadding")
 
     override fun encrypt(input: String, key: String): String {
         val encrypted: ByteArray = try {
