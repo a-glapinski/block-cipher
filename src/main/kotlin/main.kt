@@ -19,7 +19,7 @@ fun main() {
 
     errorPropagationTest()
 
-    //    init()
+//    init()
 }
 
 fun errorPropagationTest() {
@@ -27,9 +27,15 @@ fun errorPropagationTest() {
     val input = "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd"
     val ciphers = enumValues<AES.Mode>().map { mode -> AES(mode) }
 
+    val randomIndex = (0..15).random()
+    val randomLetter = ('A'..'Z').random()
+
+    println("Index: $randomIndex")
+    println("Letter: $randomLetter")
+
     ciphers.forEach {
         val encrypted = it.encrypt(input, KEY)
-        val modified = encrypted.toCharArray().apply { set((0..15).random(), ('A'..'Z').random()) }
+        val modified = encrypted.toCharArray().apply { set(randomIndex, randomLetter) }
             .joinToString("")
         val decrypted = it.decrypt(modified, KEY).chunked(16).joinToString(" ")
 
